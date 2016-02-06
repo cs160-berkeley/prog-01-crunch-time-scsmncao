@@ -7,6 +7,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        InputFilter filter = new InputFilter() {
+            public CharSequence filter(CharSequence source, int start, int end,
+                                       Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!Character.isDigit(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
+
         final EditText weightText = (EditText) findViewById(R.id.editText26);
         weightText.setRawInputType(Configuration.KEYBOARD_12KEY);
         weightText.setOnKeyListener(new View.OnKeyListener() {
@@ -49,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        weightText.setFilters(new InputFilter[]{filter});
 
         tableOfIds = new Hashtable();
         tableOfConversions = new Hashtable();
@@ -170,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
             });
+            text.setFilters(new InputFilter[]{filter});
         }
     }
 }
